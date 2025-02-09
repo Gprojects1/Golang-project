@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package contracts;
+
+import "contracts/k-means.proto";
+
+option go_package = "protobuf/algorithms";
+
+message WorkerRq {
+  Kstart rq_data = 1;
+  string correlation_id = 2;
+}
+
+message WorkerRs {
+  ClusterList rs_data = 1;
+  string correlation_id = 2;
+}

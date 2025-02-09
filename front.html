@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kstart Clustering</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Kstart Clustering</h1>
+<form id="kstartForm">
+    <label for="points">Введите координаты точек (например: [1.0,2.0,3.0]; [4.0,5.0,6.0]):</label><br>
+    <input type="text" id="points" required placeholder='ример: [[1.0,2.0,3.0],[4.0,5.0,6.0]]'><br>
+
+    <label for="clusters">Введите количество кластеров:</label><br>
+    <input type="number" id="clusters" required min="1"><br>
+
+    <button type="submit">Отправить</button>
+</form>
+
+<h2>Ответ от сервера:</h2>
+<pre id="response"></pre>
+
+<script>
+    document.getElementById('kstartForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Остановить отправку формы
+
+        // Получаем значения из полей формы
+        const pointsInput = document.getElementById('Points').value;
+        const clustersInput = document.getElementById('Clusters').value;
+
+        // Преобразуем введенные данные в нужный формат
+        let points;
+        try {
+            points = JSON.parse(pointsInput);
+        } catch (error) {
+            document.getElementById('response').innerText = 'Ошибка: Неверный формат координат.';
+            return;
+        }
+
+        // Создаем объект Kstart
+        const kstartData = {
+            points: points.map(coords => ({ coordinates: coords })),
+            clusters: parseInt(clustersInput)
+        };
+
+        try {
+            // Отправка данных на сервер
+            const response = await fetch('http://localhost:8080/api/kstart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(kstartData)
+            });
+
+            // Обработка ответа от сервера
+            if (!response.ok) {
+                throw new Error('Ошибка сети');
+            }
+
+            const responseData = await response.json();
+            document.getElementById('response').innerText = JSON.stringify(responseData, null, 2);
+        } catch (error) {
+            document.getElementById('response').innerText = 'Ошибка: ' + error.message;
+        }
+    });
+</script>
+</body>
+</html>

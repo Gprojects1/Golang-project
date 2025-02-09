@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package contracts;
+
+option go_package = "protobuf/algorithms";
+
+message Point{
+    repeated float Coordinates = 1;
+}
+
+message Cluster{
+    Point Centroid = 1;
+    repeated Point Points  = 2;
+}
+
+message Kstart{
+    repeated  Point Points = 1;
+    int64 Clasters = 2;
+}
+
+message ClusterList{
+  repeated Cluster clusters = 1;
+}

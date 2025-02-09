@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package contracts;
+
+import "contracts/k-means.proto";
+
+option go_package = "protobuf/algorithms";
+
+service AlgorithmsService {
+  rpc DoAlgorithm(Kstart) returns (ClusterList);
+}
